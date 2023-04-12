@@ -19,4 +19,11 @@ class User < ApplicationRecord
   # これつけると、saveメソッドが使えない？
   # 厳密には、saveメソッドで更新しようとした時、他のカラムは保存されているそのままの値が使われるが、
   # パスワードに関しては保存されているカラム名がpassword_digestであり、saveでpasswordのバリデーションに引っかかるため？
+
+  # 渡された文字列のハッシュ値を返す
+  def self.digest(string)
+    cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
+                                                  BCrypt::Engine.cost
+    BCrypt::Password.create(string, cost: cost)
+  end
 end

@@ -20,12 +20,17 @@ class UsersController < ApplicationController
 
     @user = User.new(user_params)
     if @user.save
+      reset_session
+      log_in @user
       flash[:success] = "Welcome to the Sample App!"
       redirect_to @user
       # 下記と同じ
       # redirect_to user_url(@user)
       # その理由は、redirect_to @userというコードを書くと、実際にはuser_url(@user)に
       # リダイレクトしたいということをRailsが自動的に推測してくれるから
+      # そしてリンク先のパスとしてモデルオブジェクトが渡された場合、
+      # Railsはオブジェクトを一意に表す値、つまり、idを取得しようします。
+      # だから最終的には、redirect_to @userは、redirect_to user_url(@user.id)と等価となります。
     else
       render 'new', status: :unprocessable_entity #HTTPステータスコード422 Unprocessable Entityに対応するもの
     end
