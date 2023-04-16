@@ -1,3 +1,5 @@
+# bundle install後に新しいgemが正しく読み込まれる様にrails serverを再起動する
+
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
@@ -12,6 +14,9 @@ gem "jbuilder",        "2.11.5"
 gem "puma",            "5.6.4"
 gem "bootsnap",        "1.12.0", require: false
 gem "bcrypt",          "3.1.18"
+gem "faker",           "2.21.0"
+gem "will_paginate",           "3.3.1"
+gem "bootstrap-will_paginate", "1.0.0"
 
 group :development, :test do
   gem "sqlite3", "1.4.2"

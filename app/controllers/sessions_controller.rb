@@ -7,13 +7,16 @@ class SessionsController < ApplicationController
     if @user&.authenticate(params[:session][:password])
     # ↓と一緒
     # if user && user.authenticate(params[:session][:password])
+      forwarding_url = session[:forwarding_url]
       # セッション固定攻撃の対策でログイン直前にセッションをリセットする
       reset_session
       params[:session][:remember_me] == '1' ? remember(@user) : forget(@user)
       log_in @user
-      redirect_to @user
+      # redirect_to @user
       # 上は以下と同じらしい
       # user_url(user)
+
+      redirect_to forwarding_url || @user
     else
       flash.now[:danger] = 'Invalid email/password combination'
       render 'new', status: :unprocessable_entity
