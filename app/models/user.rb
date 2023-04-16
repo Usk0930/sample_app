@@ -1,6 +1,11 @@
 class User < ApplicationRecord
   # 仮想の（DBにカラムが存在しない）属性を定義
   attr_accessor :remember_token
+  attr_accessor :activation_token
+
+  before_save   :downcase_email
+  before_create :create_activation_digest
+
   # ↑パスワード用のremember_tokenはhas_secure_passwordが作ってくれている
   # TODO: この仕組みを復習する
 
@@ -77,4 +82,34 @@ class User < ApplicationRecord
   def forget
     update_attribute(:remember_digest, nil)
   end
+
+  def authenticated?(attribute, token)
+    # sendメソッドは渡されたオブジェクトに「メッセージを送る」ことによって、呼び出すメソッドを動的に決めることができます。
+    digest = send("#{attribute}_digest")
+    return false if digest.nil?
+    BCrypt::Password.new(digest).is_password?(token)
+  end
+
+  # アカウントを有効にする
+  def activate
+    # self.は省略できる
+    self.update_attribute(:activated,    true)
+    update_attribute(:activated_at, Time.zone.now)
+  end
+
+  # 有効化用のメールを送信する
+  def send_activation_email
+    UserMailer.account_activation(self).deliver_now
+  end
+
+  private
+    def downcase_email
+      self.email = email.downcase
+    end
+
+    # 有効化トークンとダイジェストを作成および代入する
+    def create_activation_digest
+      self.activation_token = User.new_token
+      self.activation_digest = User.digest(activation_token)
+    end
 end

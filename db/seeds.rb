@@ -1,21 +1,21 @@
-# create!は基本的にcreateメソッドと同じですが、ユーザーが無効な場合にfalseを返すのではなく例外を発生させる
-User.create!(
-              name: "admin user",
-              email: "admin@railstutorial.org",
-              password: "testtest",
-              password_confirmation: "testtest",
-              admin: true
-            )
+# メインのサンプルユーザーを1人作成する
+User.create!(name:  "Example User",
+  email: "example@railstutorial.org",
+  password:              "foobar",
+  password_confirmation: "foobar",
+  admin:     true,
+  activated: true,
+  activated_at: Time.zone.now)
 
 # 追加のユーザーをまとめて生成する
 99.times do |n|
-  name  = Faker::Name.name
-  email = "example-#{n+1}@railstutorial.org"
-  password = "password"
-  User.create!(name:  name,
-               email: email,
-               password:              password,
-               password_confirmation: password)
+name  = Faker::Name.name
+email = "example-#{n+1}@railstutorial.org"
+password = "password"
+User.create!(name:  name,
+    email: email,
+    password:              password,
+    password_confirmation: password,
+    activated: true,
+    activated_at: Time.zone.now)
 end
-
-# TODO:モデルごとにシーダーを分割したい場合は？

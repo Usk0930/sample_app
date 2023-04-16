@@ -2,6 +2,7 @@ require "test_helper"
 
 # 下記の様に複数クラスを書いたりする？
 
+# setupのみのクラスは末尾にTestをつけない（Testをつけると単体で実行される）
 class UsersLogin < ActionDispatch::IntegrationTest
 
   def setup

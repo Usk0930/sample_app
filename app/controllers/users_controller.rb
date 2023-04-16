@@ -29,11 +29,15 @@ class UsersController < ApplicationController
 
     @user = User.new(user_params)
     if @user.save
-      reset_session
-      remember @user
-      log_in @user
-      flash[:success] = "Welcome to the Sample App!"
-      redirect_to @user
+      @user.send_activation_email
+      flash[:info] = "Please check your email to activate your account."
+      redirect_to root_url
+      # reset_session
+      # remember @user
+      # log_in @user
+      # flash[:success] = "Welcome to the Sample App!"
+      # redirect_to @user
+
       # 下記と同じ
       # redirect_to user_url(@user)
       # その理由は、redirect_to @userというコードを書くと、実際にはuser_url(@user)に
